@@ -5,6 +5,7 @@ private struct PullToRefresh: UIViewRepresentable {
     
     @Binding var isShowing: Bool
     let onRefresh: () -> Void
+    @State var refreshing: Bool = false
     
     public init(
         isShowing: Binding<Bool>,
@@ -65,8 +66,10 @@ private struct PullToRefresh: UIViewRepresentable {
             
             if let refreshControl = tableView.refreshControl {
                 if self.isShowing {
+                    self.refreshing = true
                     refreshControl.beginRefreshing()
-                } else {
+                } else if self.refreshing {
+                    self.refreshing = false
                     refreshControl.endRefreshing()
                 }
                 return
